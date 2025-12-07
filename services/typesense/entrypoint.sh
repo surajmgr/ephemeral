@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
+# --- Generate rclone config dynamically ---
+mkdir -p /root/.config/rclone
+
+cat > /root/.config/rclone/rclone.conf <<EOF
+[remote]
+type = ${RCLONE_CONFIG_REMOTE_TYPE:-pcloud}
+token = {"access_token":"${RCLONE_CONFIG_REMOTE_TOKEN}","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"}
+EOF
+
+echo "[INFO] rclone config generated successfully"
+
+# --- Source utils ---
 source /app/scripts/utils.sh
 
 # Configuration

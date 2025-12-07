@@ -1,4 +1,4 @@
-FROM typesense/typesense:latest
+FROM typesense/typesense:29.0
 
 # Install dependencies for scripts
 USER root

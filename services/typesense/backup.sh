@@ -30,7 +30,7 @@ HTTP_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
   "${TYPESENSE_HOST}/operations/snapshot?snapshot_path=${LOCAL_SNAPSHOT_PATH}" \
   -H "X-TYPESENSE-API-KEY: ${TYPESENSE_API_KEY}")
 
-if [ "$HTTP_RESPONSE" != "200" ]; then
+if [ "$HTTP_RESPONSE" != "200" ] && [ "$HTTP_RESPONSE" != "201" ]; then
     log_error "Snapshot failed. HTTP Status: $HTTP_RESPONSE"
     exit 1
 fi
