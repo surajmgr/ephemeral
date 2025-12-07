@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  typesense:
+    build:
+      context: ../../
+      dockerfile: services/typesense/Dockerfile
+    container_name: typesense-ephemeral
+    environment:
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_HOST=${TYPESENSE_HOST:-http://localhost:8108}
+      - BACKUP_INTERVAL=${BACKUP_INTERVAL:-3600}
+      - CLOUD_DEST=${CLOUD_DEST}
+      - RCLONE_CONFIG_REMOTE_TYPE=${RCLONE_CONFIG_REMOTE_TYPE}
+      - RCLONE_CONFIG_REMOTE_TOKEN=${RCLONE_CONFIG_REMOTE_TOKEN}
+    ports:
+      - "8108:8108"
+    tmpfs:
+      - /data
+    labels:
+      - "ephemeral.backup=true"
+    restart: unless-stopped

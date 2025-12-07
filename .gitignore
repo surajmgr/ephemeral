@@ -1,0 +1,27 @@
+# General
+.DS_Store
+*.log
+tmp/
+temp/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Common dependencies (just in case)
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
