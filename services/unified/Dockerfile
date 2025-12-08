@@ -4,7 +4,7 @@ FROM typesense/typesense:26.0 as typesense
 # I'll stick to what was in the user's file.
 
 FROM typesense/typesense:29.0 as typesense-source
-FROM quay.io/minio/minio:latest as minio-source
+# Removed as per requirement to use Backblaze B2
 
 # Valid Novu images are typically ghcr.io/novuhq/novu/...
 # We will use 'latest' for now, but in production specific tags are better.
@@ -29,10 +29,6 @@ RUN apt-get update && apt-get install -y \
 COPY --from=typesense-source /opt/typesense-server /usr/local/bin/typesense-server
 # Create data dir
 RUN mkdir -p /data
-
-# --- Minio Setup ---
-COPY --from=minio-source /opt/bin/minio /usr/local/bin/minio
-RUN mkdir -p /data/minio
 
 # --- Novu Setup ---
 WORKDIR /app

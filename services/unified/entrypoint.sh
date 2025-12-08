@@ -37,20 +37,8 @@ EOF
     log_info "Rclone config generated."
 fi
 
-# --- 2. Start Minio (if Novu is enabled) ---
-# Novu needs S3. If we don't have external S3, we run Minio.
-# We run Minio if 'novu' is running OR if 'minio' is explicitly requested.
-if is_enabled "novu" || is_enabled "minio"; then
-    log_info "Starting Minio..."
-    mkdir -p /data/minio
-    # Minio default ports: 9000 (API), 9001 (Console)
-    # We might need to remap if they conflict.
-    export MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
-    export MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin}
-    minio server /data/minio --console-address ":9001" &
-    MINIO_PID=$!
-    log_info "Minio started (PID $MINIO_PID)"
-fi
+# --- 2. Start Minio (Removed) ---
+# Backblaze B2 is used externally.
 
 # --- 3. Start Typesense ---
 if is_enabled "typesense"; then
