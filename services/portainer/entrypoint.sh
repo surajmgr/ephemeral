@@ -25,7 +25,7 @@ BACKUP_INTERVAL=${BACKUP_INTERVAL:-3600} # Default 1 hour
 log_info "Starting Portainer..."
 # Portainer on Alpine is located at /portainer
 # We pass arguments if any. Standard portainer args can be appended.
-/portainer --data /data &
+/portainer --data /data --bind :9443 --bind :8000 --host unix:///var/run/docker.sock &
 PORTAINER_PID=$!
 
 log_success "Portainer started with PID $PORTAINER_PID"
