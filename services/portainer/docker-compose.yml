@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  portainer:
+    build:
+      context: ../../
+      dockerfile: services/portainer/Dockerfile
+    container_name: portainer-ephemeral
+    environment:
+      - BACKUP_INTERVAL=${BACKUP_INTERVAL:-3600}
+      - CLOUD_DEST=${CLOUD_DEST}
+      - RCLONE_CONFIG_REMOTE_TYPE=${RCLONE_CONFIG_REMOTE_TYPE}
+      - RCLONE_CONFIG_REMOTE_TOKEN=${RCLONE_CONFIG_REMOTE_TOKEN}
+    ports:
+      - "9000:9000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    tmpfs:
+      - /data
+    labels:
+      - "ephemeral.backup=true"
+    restart: unless-stopped
