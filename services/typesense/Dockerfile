@@ -4,9 +4,14 @@ FROM ghcr.io/bfritscher/typesense-dashboard:latest as dashboard-source
 # Stage 2: Main image
 FROM typesense/typesense:29.0
 
-# Install dependencies for scripts and Node.js for serving dashboard
+# Install dependencies for scripts
 USER root
-RUN apt-get update && apt-get install -y curl tar jq bash unzip nodejs npm && \
+RUN apt-get update && apt-get install -y curl tar jq bash unzip ca-certificates gnupg && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20 from NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # Install serve for hosting dashboard static files
