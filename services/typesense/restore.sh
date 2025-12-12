@@ -37,8 +37,6 @@ log_success "Downloaded snapshot."
 
 # Extract
 log_info "Extracting snapshot to $DATA_DIR..."
-# Ensure data dir is clean (should be empty on fresh container, but safe to check)
-# CAUTION: This deletes existing data. Only run this on startup before Typesense starts!
 if [ -d "$DATA_DIR" ]; then
     log_warn "Cleaning existing data directory..."
     rm -rf "${DATA_DIR:?}"/*
@@ -47,18 +45,17 @@ mkdir -p "$DATA_DIR"
 
 tar -xzf "$DOWNLOAD_DIR/$LATEST_ARCHIVE_NAME" -C "$DOWNLOAD_DIR"
 
-# The tar contains a directory named after timestamp (e.g. 2024...)
-EXTRACTED_DIR=$(find "$DOWNLOAD_DIR" -maxdepth 1 -mindepth 1 -type d)
+# Find only the timestamped restore directory (ignoring other dirs like tls/bin/etc)
+EXTRACTED_DIR=$(find "$DOWNLOAD_DIR" -maxdepth 1 -mindepth 1 -type d -name '20*' | head -n 1)
 
 if [ -n "$EXTRACTED_DIR" ]; then
    log_info "Moving data from $EXTRACTED_DIR to $DATA_DIR"
    mv "$EXTRACTED_DIR"/* "$DATA_DIR/"
+   log_success "Restore complete."
 else
-   log_error "Failed to find extracted directory."
+   log_error "Failed to find extracted restore directory."
    exit 1
 fi
-
-log_success "Restore complete."
 
 # Cleanup
 cleanup_temp "$DOWNLOAD_DIR"
