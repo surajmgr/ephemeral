@@ -30,7 +30,14 @@ TYPESENSE_PID=$!
 
 log_success "Typesense started with PID $TYPESENSE_PID"
 
-# 3. Start Backup Loop
+# 3. Start Dashboard
+log_info "Starting Typesense Dashboard on port 8109..."
+cd /app/dashboard
+serve -s . -l 8109 &
+DASHBOARD_PID=$!
+log_success "Dashboard started with PID $DASHBOARD_PID"
+
+# 4. Start Backup Loop
 (
     log_info "Starting backup loop (Interval: ${BACKUP_INTERVAL}s)..."
     while kill -0 $TYPESENSE_PID > /dev/null 2>&1; do
@@ -44,8 +51,8 @@ log_success "Typesense started with PID $TYPESENSE_PID"
     done
 ) &
 
-# 4. Wait for Typesense to exit
-wait $TYPESENSE_PID
+# 5. Wait for any process to exit
+wait -n
 EXIT_CODE=$?
-log_info "Typesense exited with code $EXIT_CODE"
+log_info "A process exited with code $EXIT_CODE"
 exit $EXIT_CODE

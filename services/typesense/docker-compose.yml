@@ -15,6 +15,7 @@ services:
       - RCLONE_CONFIG_REMOTE_TOKEN=${RCLONE_CONFIG_REMOTE_TOKEN}
     ports:
       - "8108:8108"
+      - "8109:8109"
     tmpfs:
       - /data
     labels:
